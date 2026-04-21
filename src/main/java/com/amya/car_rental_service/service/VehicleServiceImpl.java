@@ -8,6 +8,7 @@ import com.amya.car_rental_service.repository.VehicleRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -36,5 +37,41 @@ public class VehicleServiceImpl implements VehicleService {
     public Vehicle getVehicleById(String id) {
         return vehicleRepository.findById(id)
                 .orElseThrow(() -> new VehicleNotFoundException(AppConstants.VEHICLE_NOT_FOUND + id));
+    }
+
+    @Override
+    public void associate(String vehicleId, String userId) {
+        Vehicle vehicle = vehicleRepository.findById(vehicleId)
+                .orElseThrow(() -> new VehicleNotFoundException(AppConstants.VEHICLE_NOT_FOUND + vehicleId));
+
+        if (vehicle.getStatus() == Status.ASSOCIATED) {
+            throw new IllegalStateException(AppConstants.VEHICLE_ALREADY_ASSOCIATED);
+        }
+
+        vehicle.setStatus(Status.ASSOCIATED);
+        vehicle.setOwner(userId);
+        vehicle.setAssociationDate(new Date());
+
+        vehicleRepository.save(vehicle);
+    }
+
+    @Override
+    public void removeAssociation(String vehicleId, String userId) {
+        Vehicle vehicle = vehicleRepository.findById(vehicleId)
+                .orElseThrow(() -> new VehicleNotFoundException(AppConstants.VEHICLE_NOT_FOUND + vehicleId));
+
+        if (vehicle.getStatus() != Status.ASSOCIATED) {
+            throw new IllegalStateException(AppConstants.VEHICLE_NOT_ASSOCIATED);
+        }
+
+        if (vehicle.getOwner() == null || !vehicle.getOwner().equals(userId)) {
+            throw new IllegalArgumentException(AppConstants.OWNER_DOES_NOT_MATCH);
+        }
+
+        vehicle.setOwner(null);
+        vehicle.setAssociationDate(null);
+        vehicle.setStatus(Status.AVAILABLE);
+
+        vehicleRepository.save(vehicle);
     }
 }

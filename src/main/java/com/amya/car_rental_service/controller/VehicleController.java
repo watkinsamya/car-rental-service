@@ -33,4 +33,16 @@ public class VehicleController {
     public Vehicle getVehicleById(@PathVariable String id) {
         return service.getVehicleById(id);
     }
+
+    @PostMapping("/{vehicleId}/users/{userId}")
+    @ResponseStatus(HttpStatus.CREATED)
+    public void associate(@PathVariable String vehicleId, @PathVariable String userId) {
+        service.associate(vehicleId, userId);
+    }
+
+    @DeleteMapping("/{vehicleId}/users/{userId}")
+    @ResponseStatus(HttpStatus.OK)
+    public void removeAssociation(@PathVariable String vehicleId, @PathVariable String userId) {
+        service.removeAssociation(vehicleId, userId);
+    }
 }

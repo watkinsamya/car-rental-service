@@ -24,6 +24,7 @@ public class Vehicle {
     @Enumerated(EnumType.STRING)
     private Status status;
 
+    @Column(length = 50)
     private String owner;
 
     @JsonProperty("association_date")

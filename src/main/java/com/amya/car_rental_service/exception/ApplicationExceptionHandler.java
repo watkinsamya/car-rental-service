@@ -21,4 +21,16 @@ public class ApplicationExceptionHandler {
     public ErrorMessage handleVehicleNotFoundException(VehicleNotFoundException ex) {
         return new ErrorMessage(HttpStatus.NOT_FOUND.value(), ex.getMessage());
     }
+
+    @ExceptionHandler(IllegalStateException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorMessage handleIllegalStateException(IllegalStateException ex) {
+        return new ErrorMessage(HttpStatus.BAD_REQUEST.value(), ex.getMessage());
+    }
+
+    @ExceptionHandler(IllegalArgumentException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorMessage handleIllegalArgumentException(IllegalArgumentException ex) {
+        return new ErrorMessage(HttpStatus.BAD_REQUEST.value(), ex.getMessage());
+    }
 }

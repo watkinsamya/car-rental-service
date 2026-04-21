@@ -8,4 +8,6 @@ public interface VehicleService {
     Vehicle create(Vehicle vehicle);
     List<Vehicle> getAllVehicles();
     Vehicle getVehicleById(String id);
+    void associate(String vehicleId, String userId);
+    void removeAssociation(String vehicleId, String userId);
 }
